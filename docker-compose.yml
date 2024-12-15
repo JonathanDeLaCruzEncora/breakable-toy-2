@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    develop:
+      # we specify the files to watch for changes
+      watch:
+        # it'll watch for changes in package.json and package-lock.json and rebuild the container if there are any changes
+        - path: ./frontend/package.json
+          action: rebuild
+        - path: ./frontend/package-lock.json
+          action: rebuild
+        # it'll watch for changes in the frontend directory and sync the changes with the container real time
+        - path: ./frontend
+          target: /app
+          action: sync
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    develop:
+      # specify the files to watch for changes
+      watch:
+        # it'll watch for changes in the backend directory and sync the changes with the container real time
+        - path: ./backend
+          target: /app
+          action: sync
+
+networks:
+  app-network:
+    driver: bridge
