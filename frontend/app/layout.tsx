@@ -4,6 +4,8 @@ import "./globals.css";
 import { createTheme, Stack, ThemeProvider } from "@mui/material";
 import { deepPurple, lime, purple } from "@mui/material/colors";
 import SearchBar from "@/components/SearchBar";
+import { AuthProvider } from "@/components/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,10 +54,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-full overflow-x-hidden`}
       >
-        <ThemeProvider theme={theme}>
-          <SearchBar searchQuery="" />
-          {children}
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

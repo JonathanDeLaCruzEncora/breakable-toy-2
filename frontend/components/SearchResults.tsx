@@ -28,7 +28,7 @@ const SearchResults = () => {
             mx: "auto",
             width: { sm: "100%", md: "632px", lg: "964px" },
             display: "flex",
-            justifyContent: { sm: "center", md: "start" },
+            justifyContent: { xs: "center", md: "start" },
             flexWrap: "wrap",
             gap: 4,
           }}
