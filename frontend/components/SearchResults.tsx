@@ -7,11 +7,11 @@ const SearchResults = () => {
     <>
       <Box
         sx={{
-          maxWidth: { xs: "full", sm: "848px", md: "1264px" },
+          maxWidth: { xs: "100%", sm: "848px", md: "1264px" },
           mt: "50px",
           mx: "auto",
           px: "20px",
-          width: "full",
+          width: "100%",
           py: 4,
         }}
       >

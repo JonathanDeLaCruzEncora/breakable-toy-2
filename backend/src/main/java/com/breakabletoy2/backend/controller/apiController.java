@@ -58,22 +58,18 @@ public class apiController {
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("grant_type", "authorization_code");
             body.add("code", code);
-            body.add("redirect_uri", "http://localhost:3000/callback"); // Debe coincidir con la URI registrada en Spotify
+            body.add("redirect_uri", "http://localhost:3000/callback"); 
             
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
             ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, request, Map.class);
             
             if (response.getStatusCode() == HttpStatus.OK) {
-                // Map<String, Object> responseBody = response.getBody();
-                // String accessToken = (String) responseBody.get("access_token");
                 return ResponseEntity.ok(response.getBody());
             } else {
-                // Error en la respuesta
                 return ResponseEntity.status(response.getStatusCode())
                                      .body(Map.of("error", "Error al obtener el token", "details", response.getBody()));
             }
         } catch (Exception e) {
-            // Manejo de errores
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body(Map.of("error", "Error procesando la solicitud", "details", e.getMessage()));
         }
@@ -81,12 +77,11 @@ public class apiController {
 
     @GetMapping("/profile")
     public ResponseEntity<Map<String, Object>> getUserProfile(@RequestHeader("Authorization") String authorizationHeader) {
-        // Verifica que la cabecera Authorization contiene "Bearer {access_token}"
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Token no válido o ausente"));
         }
 
-        String accessToken = authorizationHeader.substring(7); // Quita "Bearer " del inicio
+        String accessToken = authorizationHeader.substring(7);
         String spotifyUrl = "https://api.spotify.com/v1/me";
 
         RestTemplate restTemplate = new RestTemplate();
@@ -117,15 +112,74 @@ public class apiController {
 
 
     @GetMapping("/me/top/artists")
-    public String getTopArtists() {
-        // Lógica para recuperar los artistas más escuchados del usuario desde Spotify
-        return "Lista de artistas principales";
+    public ResponseEntity<Map<String, Object>> getTopArtists(@RequestHeader("Authorization") String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Token no válido o ausente"));
+        }
+        System.out.println("inside Backend");
+        String accessToken = authorizationHeader.substring(7); 
+        String spotifyUrl = "https://api.spotify.com/v1/me/top/artists?limit=6";
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(
+                spotifyUrl,
+                HttpMethod.GET,
+                request,
+                Map.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return ResponseEntity.ok(response.getBody());
+            } else {
+                return ResponseEntity.status(response.getStatusCode()).body(Map.of("error", "No se pudo obtener el top de artistas"));
+            }
+
+        } catch (HttpClientErrorException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of("error", e.getResponseBodyAsString()));
+        }
     }
 
     @GetMapping("/artists/{id}")
-    public String getArtistDetails(@PathVariable String id) {
-        // Lógica para obtener detalles de un artista específico
-        return "Detalles del artista con ID: " + id;
+    public ResponseEntity<Map<String, Object>> getArtistDetails(
+        @RequestHeader("Authorization") String authorizationHeader,
+        @PathVariable String id
+        ) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Token no válido o ausente"));
+        }
+        
+        String accessToken = authorizationHeader.substring(7); 
+        String spotifyUrl = "https://api.spotify.com/v1/artists/" + id;
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(
+                spotifyUrl,
+                HttpMethod.GET,
+                request,
+                Map.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return ResponseEntity.ok(response.getBody());
+            } else {
+                return ResponseEntity.status(response.getStatusCode()).body(Map.of("error", "No se pudo obtener la info del artista"));
+            }
+
+        } catch (HttpClientErrorException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of("error", e.getResponseBodyAsString()));
+        }
     }
 
     @GetMapping("/albums/{id}")

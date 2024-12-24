@@ -11,10 +11,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()) // Desactiva CSRF si no lo necesitas (útil para desarrollo)
+        http.csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/spotify/**").permitAll() // Permitir rutas de autenticación con Spotify
-                .anyRequest().authenticated() // Bloquear cualquier otra ruta
+                .anyRequest().permitAll() 
             );
         return http.build();
     }

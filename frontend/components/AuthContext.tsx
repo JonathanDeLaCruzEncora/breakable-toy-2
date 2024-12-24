@@ -27,13 +27,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  // Cargar el token desde localStorage al iniciar
   useEffect(() => {
     const checkAuth = async () => {
-      console.log("checking");
       setIsLoading(true);
       const token = localStorage.getItem("access_token");
-      console.log(token);
       if (token) {
         setAccessToken(token);
         setIsAuthenticated(true);
@@ -45,26 +42,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     checkAuth();
   }, [loggedIn]);
 
-  // Obtener el perfil del usuario
   const fetchUserProfile = async () => {
     if (!accessToken) return;
 
     try {
-      const response = await fetch("https://api.spotify.com/v1/me", {
+      const response = await fetch("http://localhost:8080/profile", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error("Error al obtener el perfil del usuario");
+        console.error("Error al obtener el perfil del usuario");
+        return false;
       }
 
       const data = await response.json();
-      console.log("hi");
       setUser({
         name: data.display_name,
-        image: data.images?.[1]?.url || "",
+        image: data.images?.[0]?.url || "",
       });
       return true;
     } catch (error) {
