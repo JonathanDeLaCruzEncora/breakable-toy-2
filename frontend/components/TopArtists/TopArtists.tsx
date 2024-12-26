@@ -8,33 +8,12 @@ import {
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 import TopArtistCard from "./TopArtistCard";
-import { useAuth } from "../AuthContext";
-
-export interface ArtistInterface {
-  external_urls: {
-    spotify: string;
-  };
-  followers: {
-    href: string | null;
-    total: number;
-  };
-  genres: string[];
-  href: string;
-  id: string;
-  images: {
-    height: number;
-    url: string;
-    width: number;
-  }[];
-  name: string;
-  popularity: number;
-  type: string;
-  uri: string;
-}
+import { useAuth } from "../Auth/AuthContext";
+import { ArtistDetailsInterface } from "@/types/spotify";
 
 const TopArtists = () => {
   const { accessToken } = useAuth();
-  const [topArtists, setTopArtists] = useState<ArtistInterface[]>([]);
+  const [topArtists, setTopArtists] = useState<ArtistDetailsInterface[]>([]);
 
   useEffect(() => {
     const fetchTopArtists = async () => {

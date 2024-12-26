@@ -1,11 +1,4 @@
 import ArtistPage from "@/components/ArtistPage";
-import { useAuth } from "@/components/AuthContext";
-import SearchBar from "@/components/SearchBar";
-import TopSongsTable from "@/components/Tables/TopSongsTable";
-import { ArtistInterface } from "@/components/TopArtists/TopArtists";
-import { Box, Typography } from "@mui/material";
-import Paper from "@mui/material/Paper";
-import { useEffect, useState } from "react";
 
 interface PageParams {
   params: Promise<{ artistId: string }>;

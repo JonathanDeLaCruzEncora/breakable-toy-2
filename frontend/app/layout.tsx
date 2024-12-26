@@ -1,11 +1,9 @@
 "use client";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { createTheme, Stack, ThemeProvider } from "@mui/material";
-import { deepPurple, lime, purple } from "@mui/material/colors";
-import SearchBar from "@/components/SearchBar";
-import { AuthProvider } from "@/components/AuthContext";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { deepPurple, lime } from "@mui/material/colors";
+import { AuthProvider } from "@/components/Auth/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +49,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <title>Sparktify</title>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased max-w-full overflow-x-hidden`}
       >

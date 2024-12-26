@@ -1,15 +1,10 @@
 "use client";
-import { useAuth } from "@/components/AuthContext";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import SearchBar from "@/components/SearchBar";
-import SearchResults from "@/components/SearchResults";
+import ProtectedRoute from "@/components/Auth/ProtectedRoute";
+import SearchBar from "@/components/Search/SearchBar";
+import SearchResults from "@/components/Search/SearchResults";
 import TopArtists from "@/components/TopArtists/TopArtists";
-import UserMenu from "@/components/UserMenu";
-import VarietyCard from "@/components/VarietyCard";
-import { ThemeProvider } from "@emotion/react";
-import { Avatar, Box, Button, Menu, MenuItem, Typography } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import UserMenu from "@/components/utils/UserMenu";
+import { Box } from "@mui/material";
 
 export default function Home() {
   return (

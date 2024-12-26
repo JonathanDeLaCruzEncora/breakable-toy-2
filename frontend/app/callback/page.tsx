@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { useAuth } from "@/components/AuthContext";
+import { useAuth } from "@/components/Auth/AuthContext";
 import { Box, Typography } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 

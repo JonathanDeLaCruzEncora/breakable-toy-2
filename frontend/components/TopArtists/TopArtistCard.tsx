@@ -7,12 +7,12 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { ArtistInterface } from "./TopArtists";
 import Link from "next/link";
+import { ArtistDetailsInterface } from "@/types/spotify";
 
 interface ComponentProps {
   key: number;
-  artist: ArtistInterface;
+  artist: ArtistDetailsInterface;
 }
 
 const TopArtistCard: React.FC<ComponentProps> = ({ artist }) => {

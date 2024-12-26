@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
-import VarietyCard from "./VarietyCard";
+import VarietyCard from "./../utils/VarietyCard";
 
 const SearchResults = () => {
   return (

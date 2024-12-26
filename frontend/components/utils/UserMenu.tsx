@@ -1,7 +1,7 @@
 import { Avatar, Button, Menu, MenuItem, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./../Auth/AuthContext";
 
 const UserMenu = () => {
   const {

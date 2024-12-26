@@ -8,7 +8,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
+import { Track } from "@/types/spotify";
 
 function createData(
   name: string,
@@ -19,40 +21,13 @@ function createData(
   return { name, timesPlayed, songLength, image };
 }
 
-const rows = [
-  createData(
-    "Frozen yoghurt",
-    159,
-    "3:38",
-    "https://www.mondosonoro.com/wp-content/uploads/2023/12/billie-eillish.jpg"
-  ),
-  createData(
-    "Ice cream sandwich",
-    237,
-    "3:38",
-    "https://www.mondosonoro.com/wp-content/uploads/2023/12/billie-eillish.jpg"
-  ),
-  createData(
-    "Eclair",
-    262,
-    "4:53",
-    "https://www.mondosonoro.com/wp-content/uploads/2023/12/billie-eillish.jpg"
-  ),
-  createData(
-    "Cupcake",
-    305,
-    "2:23",
-    "https://www.mondosonoro.com/wp-content/uploads/2023/12/billie-eillish.jpg"
-  ),
-  createData(
-    "Gingerbread",
-    356,
-    "1:20",
-    "https://www.mondosonoro.com/wp-content/uploads/2023/12/billie-eillish.jpg"
-  ),
-];
+const getMinutes = (timeMs: number) => {
+  const min = Math.floor(timeMs / 60000);
+  const sec = Math.floor((timeMs % 60000) / 1000);
+  return `${min}:${sec.toString().padStart(2, "0")} `;
+};
 
-const TopSongsTable = () => {
+const TopSongsTable = ({ songs }: { songs: Track[] }) => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -63,48 +38,63 @@ const TopSongsTable = () => {
             </TableCell>
             <TableCell sx={{ width: "120px" }} align="center"></TableCell>
             <TableCell align="left">Song</TableCell>
-            <TableCell align="center">Times Played</TableCell>
             <TableCell align="center">Length</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, i) => (
+          {songs.length > 0 ? (
+            songs.map((row, i) => (
+              <TableRow
+                key={i}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                }}
+              >
+                <TableCell
+                  sx={{ width: "20px" }}
+                  align="center"
+                  component="th"
+                  scope="row"
+                >
+                  {i + 1}
+                </TableCell>
+                <TableCell sx={{ width: "120px" }} align="center">
+                  <Box
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      aspectRatio: "1 / 1",
+                      overflow: "hidden",
+                      borderRadius: 2,
+                      mx: "auto",
+                    }}
+                  >
+                    <img
+                      className=" object-cover  w-full h-full"
+                      src={row.album.images[0].url}
+                    />
+                  </Box>
+                </TableCell>
+                <TableCell align="left">
+                  <Typography letterSpacing={1}> {row.name}</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  {row.duration_ms ? getMinutes(row.duration_ms) : "0"}
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
             <TableRow
-              key={row.name}
               sx={{
                 "&:last-child td, &:last-child th": { border: 0 },
               }}
             >
-              <TableCell
-                sx={{ width: "20px" }}
-                align="center"
-                component="th"
-                scope="row"
-              >
-                {i + 100}
-              </TableCell>
-              <TableCell sx={{ width: "120px" }} align="center">
-                <Box
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    aspectRatio: "1 / 1",
-                    overflow: "hidden",
-                    borderRadius: 2,
-                    mx: "auto",
-                  }}
-                >
-                  <img
-                    className=" object-cover  w-full h-full"
-                    src="https://www.mondosonoro.com/wp-content/uploads/2023/12/billie-eillish.jpg"
-                  />
-                </Box>
-              </TableCell>
-              <TableCell align="left">{row.name}</TableCell>
-              <TableCell align="center">{row.timesPlayed}</TableCell>
-              <TableCell align="center">{row.songLength}</TableCell>
+              <TableCell></TableCell>
+              <TableCell>{""}</TableCell>
+              <TableCell>No songs were found.</TableCell>
+              <TableCell>{""}</TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </TableContainer>

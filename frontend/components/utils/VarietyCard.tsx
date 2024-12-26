@@ -13,23 +13,35 @@ import {
 import { grey } from "@mui/material/colors";
 import React from "react";
 
-const VarietyCard = () => {
+interface ComponentProps {
+  imgSrc: string;
+  mainText: string;
+  secondText: string;
+  thirdText: string;
+}
+
+const VarietyCard = ({
+  imgSrc,
+  mainText,
+  secondText,
+  thirdText,
+}: ComponentProps) => {
   return (
     <Card
-      elevation={12}
+      elevation={2}
       sx={{
         width: "100%",
         minWidth: "300px",
         height: "100px",
         maxWidth: "300px",
         border: "2px solid",
-        borderColor: grey[800],
+        borderColor: grey[900],
         transition: "all",
         transitionDuration: "200ms",
         ":hover": {
           scale: "105%",
           cursor: "pointer",
-          borderColor: "secondary.main",
+          borderColor: "primary.main",
         },
       }}
     >
@@ -46,11 +58,13 @@ const VarietyCard = () => {
       >
         <CardMedia
           component={"img"}
-          image="https://www.mondosonoro.com/wp-content/uploads/2023/12/billie-eillish.jpg"
+          image={imgSrc}
           sx={{
             height: "90%",
+            minHeight: "90%",
             borderRadius: 1,
             width: "30%",
+            minWidth: "30%",
             aspectRatio: "1/1",
           }}
         ></CardMedia>
@@ -72,7 +86,7 @@ const VarietyCard = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              Billie Eilishkkkkkkkk lksjlkj
+              {mainText || "\u00A0"}
             </Typography>
 
             <Typography
@@ -85,7 +99,7 @@ const VarietyCard = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              Pop
+              {secondText || "\u00A0"}
             </Typography>
             <Typography
               variant="subtitle1"
@@ -97,7 +111,7 @@ const VarietyCard = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              2024
+              {thirdText || "\u00A0"}
             </Typography>
           </Box>
         </CardContent>

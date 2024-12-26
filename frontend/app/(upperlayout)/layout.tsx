@@ -1,9 +1,12 @@
 "use client";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import SearchBar from "@/components/SearchBar";
-import UserMenu from "@/components/UserMenu";
-import { Box } from "@mui/material";
+import ProtectedRoute from "@/components/Auth/ProtectedRoute";
+import SearchBar from "@/components/Search/SearchBar";
+import UserMenu from "@/components/utils/UserMenu";
+import { Box, Button } from "@mui/material";
+
+import HomeIcon from "@mui/icons-material/Home";
 import React from "react";
+import Link from "next/link";
 
 function layout({
   children,
@@ -20,10 +23,29 @@ function layout({
           px: "20px",
           width: "full",
           display: "flex",
-          justifyContent: { xs: "center", sm: "end" },
+          justifyContent: "space-between",
           alignItems: "center",
         }}
       >
+        <Link href="/">
+          <Button
+            variant="outlined"
+            startIcon={<HomeIcon />}
+            sx={{
+              bgcolor: "grey.900",
+              color: "grey.300",
+              borderColor: "grey.600",
+              textTransform: "capitalize",
+              ":hover": {
+                bgcolor: "#0f0f0f",
+                borderColor: "primary.light",
+                color: "primary.light",
+              },
+            }}
+          >
+            Home
+          </Button>
+        </Link>
         <UserMenu />
       </Box>
       <SearchBar searchQuery="" />

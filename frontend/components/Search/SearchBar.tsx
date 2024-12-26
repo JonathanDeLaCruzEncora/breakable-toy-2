@@ -11,7 +11,6 @@ import {
 import { ChangeEvent, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { purple, red } from "@mui/material/colors";
 interface SearchBarProps {
   //onSearch: (query: string) => void;
   searchQuery: string;
