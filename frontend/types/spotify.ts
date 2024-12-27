@@ -15,7 +15,35 @@ export interface Album {
   uri: string;
 }
 
-interface Artist {
+export interface AlbumDetails {
+  album_type: string;
+  artists: Artist[];
+  available_markets: string[];
+  copyrights: Copyright[];
+  external_ids: ExternalIds;
+  external_urls: ExternalUrls;
+  genres: string[];
+  href: string;
+  id: string;
+  images: { url: string; height: number; width: number }[];
+  label: string;
+  name: string;
+  popularity: number;
+  release_date: string;
+  release_date_precision: string;
+  total_tracks: number;
+  tracks: {
+    href: string;
+    items: Track[];
+    limit: number;
+    next: string;
+    previous: string;
+    total: number;
+  };
+  uri: string;
+}
+
+export interface Artist {
   id: string;
   name: string;
   href: string;
@@ -73,4 +101,9 @@ export interface ArtistDetailsInterface {
   popularity: number;
   type: string;
   uri: string;
+}
+
+interface Copyright {
+  text: string;
+  type: string;
 }

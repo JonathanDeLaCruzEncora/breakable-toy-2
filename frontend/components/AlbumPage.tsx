@@ -1,24 +1,41 @@
 "use client";
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TopSongsTable from "./Tables/TopSongsTable";
 import { useAuth } from "./Auth/AuthContext";
 import LoadingBar from "./utils/LoadingBar";
-import { Album, ArtistDetailsInterface, Track } from "@/types/spotify";
+import {
+  Album,
+  AlbumDetails,
+  Artist,
+  ArtistDetailsInterface,
+  Track,
+} from "@/types/spotify";
 import VarietyCard from "./utils/VarietyCard";
+import ListOfSongs from "./utils/ListOfSongs";
 
-const ArtistPage = ({ artistId }: { artistId: string }) => {
+const getMinutes = (timeMs: number) => {
+  const min = Math.floor(timeMs / 60000);
+  const sec = Math.floor((timeMs % 60000) / 1000);
+  return `${min}:${sec.toString().padStart(2, "0")} `;
+};
+
+const getTotalMinutes = (list: Track[]) => {
+  return getMinutes(list.reduce((acc, val) => acc + val.duration_ms, 0));
+};
+
+const AlbumPage = ({ albumId }: { albumId: string }) => {
   const { accessToken } = useAuth();
+  const [album, setAlbum] = useState<AlbumDetails | null>(null);
   const [artist, setArtist] = useState<ArtistDetailsInterface | null>(null);
-  const [topSongs, setTopSongs] = useState<Track[]>([]);
-  const [discography, setDiscography] = useState<Album[]>([]);
+  const [MoreFromArtist, setMoreFromArtist] = useState<Album[]>([]);
 
   useEffect(() => {
-    const fetchArtistDetails = async () => {
+    const fetchAlbumDetails = async () => {
       if (accessToken) {
         try {
           const response = await fetch(
-            `http://localhost:8080/artists/${artistId}`,
+            `http://localhost:8080/albums/${albumId}`,
             {
               method: "GET",
               headers: {
@@ -30,12 +47,47 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
 
           if (!response.ok) {
             console.error(
-              "Error al obtener los detalles de los artistas: ",
+              "Error al obtener los detalles del album: ",
               response.statusText
             );
             return;
           }
           const data = await response.json();
+          setAlbum(data);
+          console.log(data);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+
+    fetchAlbumDetails();
+  }, [accessToken]);
+
+  useEffect(() => {
+    const fetchArtistDetails = async () => {
+      if (accessToken && album) {
+        try {
+          const response = await fetch(
+            `http://localhost:8080/artists/${album.artists[0].id}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (!response.ok) {
+            console.error(
+              "Error al obtener los detalles del artista: ",
+              response.statusText
+            );
+            return;
+          }
+          const data = await response.json();
+          console.log(data);
           setArtist(data);
         } catch (error) {
           console.error(error);
@@ -43,40 +95,11 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
       }
     };
 
-    const fetchArtistTopSongs = async () => {
-      if (accessToken) {
-        try {
-          const response = await fetch(
-            `http://localhost:8080/artists/${artistId}/top-tracks`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          if (!response.ok) {
-            console.error(
-              "Error al obtener el top de canciones del artista: ",
-              response.statusText
-            );
-            return;
-          }
-          const data = await response.json();
-          setTopSongs([...data.tracks]);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    };
-
     const fetchArtistAlbums = async () => {
-      if (accessToken) {
+      if (accessToken && album) {
         try {
           const response = await fetch(
-            `http://localhost:8080/artists/${artistId}/albums`,
+            `http://localhost:8080/artists/${album.artists[0].id}/albums`,
             {
               method: "GET",
               headers: {
@@ -95,21 +118,20 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
           }
           const data = await response.json();
           console.log(data);
-          setDiscography([...data.items]);
+          setMoreFromArtist([...data.items]);
         } catch (error) {
           console.error(error);
         }
       }
     };
 
-    fetchArtistDetails();
-    fetchArtistTopSongs();
     fetchArtistAlbums();
-  }, [accessToken]);
+    fetchArtistDetails();
+  }, [album]);
 
   return (
     <>
-      {artist ? (
+      {album ? (
         <Box
           sx={{
             maxWidth: { xs: "full", sm: "848px", md: "1264px" },
@@ -135,7 +157,7 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
           >
             <Box
               component={"img"}
-              src={artist.images[0].url}
+              src={album.images[0].url}
               sx={{
                 position: "absolute",
                 zIndex: -1,
@@ -160,7 +182,7 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
             >
               <img
                 className=" object-cover  w-full h-full"
-                src={artist.images[0].url}
+                src={album.images[0].url}
               />
             </Paper>
             <Box>
@@ -170,11 +192,11 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
                   sx={{
                     fontWeight: "bold",
                     letterSpacing: "1px",
-                    mt: "20px",
+                    mt: "5px",
                     mb: "4px",
                   }}
                 >
-                  {artist?.name}
+                  {album?.name}
                 </Typography>
                 <Box
                   sx={{
@@ -193,13 +215,38 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
                   my: "20px",
                 }}
               >
-                {`Genres: ${artist.genres.join(", ")}`}
+                {`${album.release_date.split("-")[0]}`}
               </Typography>
               <Typography
                 variant="subtitle2"
                 sx={{ letterSpacing: "2px", my: "20px" }}
               >
-                {`${artist.followers.total.toLocaleString()} Followers`}
+                {`${album?.total_tracks} Track${
+                  album?.total_tracks == 1 ? "" : "s"
+                }`}
+                {album?.total_tracks
+                  ? ` - ${getTotalMinutes(album?.tracks.items)} min`
+                  : ""}
+              </Typography>
+              <Typography variant="subtitle2" sx={{ letterSpacing: "2px" }}>
+                {artist ? (
+                  <>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: { xs: "center", md: "left" },
+                        alignItems: "center",
+
+                        gap: 1,
+                      }}
+                    >
+                      <Avatar src={artist.images[0].url} />
+                      <Typography> {artist.name}</Typography>
+                    </Box>
+                  </>
+                ) : (
+                  <></>
+                )}
               </Typography>
             </Box>
           </Box>
@@ -209,8 +256,8 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
           >
             Tracks
           </Typography>
-          <TopSongsTable songs={topSongs.slice(0, 10)} />
-          {discography.length ? (
+          <ListOfSongs songs={album.tracks.items} />
+          {MoreFromArtist.length ? (
             <>
               <Typography
                 variant="h5"
@@ -221,7 +268,7 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
                   mb: "40px",
                 }}
               >
-                Discography
+                More from {artist?.name}
               </Typography>
               <Stack
                 direction={"row"}
@@ -230,7 +277,7 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
                 flexWrap={"wrap"}
                 justifyContent={"center"}
               >
-                {discography.slice(0, 8).map((album, i) => (
+                {MoreFromArtist.slice(0, 8).map((album, i) => (
                   <VarietyCard
                     key={i}
                     imgSrc={album.images[0].url}
@@ -254,4 +301,4 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
   );
 };
 
-export default ArtistPage;
+export default AlbumPage;

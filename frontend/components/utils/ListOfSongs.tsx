@@ -1,4 +1,4 @@
-import React from "react";
+import { Track } from "@/types/spotify";
 import {
   Box,
   Paper,
@@ -10,7 +10,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Track } from "@/types/spotify";
+import React from "react";
 
 const getMinutes = (timeMs: number) => {
   const min = Math.floor(timeMs / 60000);
@@ -18,7 +18,7 @@ const getMinutes = (timeMs: number) => {
   return `${min}:${sec.toString().padStart(2, "0")} `;
 };
 
-const TopSongsTable = ({ songs }: { songs: Track[] }) => {
+const ListOfSongs = ({ songs }: { songs: Track[] }) => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -27,7 +27,6 @@ const TopSongsTable = ({ songs }: { songs: Track[] }) => {
             <TableCell sx={{ width: "20px" }} align="center">
               #
             </TableCell>
-            <TableCell sx={{ width: "120px" }} align="center"></TableCell>
             <TableCell align="left">Song</TableCell>
             <TableCell align="center">Length</TableCell>
           </TableRow>
@@ -49,23 +48,6 @@ const TopSongsTable = ({ songs }: { songs: Track[] }) => {
                 >
                   {i + 1}
                 </TableCell>
-                <TableCell sx={{ width: "120px" }} align="center">
-                  <Box
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      aspectRatio: "1 / 1",
-                      overflow: "hidden",
-                      borderRadius: 2,
-                      mx: "auto",
-                    }}
-                  >
-                    <img
-                      className=" object-cover  w-full h-full"
-                      src={row.album.images[0].url}
-                    />
-                  </Box>
-                </TableCell>
                 <TableCell align="left">
                   <Typography letterSpacing={1}> {row.name}</Typography>
                 </TableCell>
@@ -81,7 +63,6 @@ const TopSongsTable = ({ songs }: { songs: Track[] }) => {
               }}
             >
               <TableCell></TableCell>
-              <TableCell>{""}</TableCell>
               <TableCell>No songs were found.</TableCell>
               <TableCell>{""}</TableCell>
             </TableRow>
@@ -92,4 +73,4 @@ const TopSongsTable = ({ songs }: { songs: Track[] }) => {
   );
 };
 
-export default TopSongsTable;
+export default ListOfSongs;

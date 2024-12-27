@@ -4,7 +4,7 @@ interface PageParams {
   params: Promise<{ artistId: string }>;
 }
 
-export default async function AlbumPage({ params }: PageParams) {
+export default async function page({ params }: PageParams) {
   const artistId = (await params).artistId;
 
   return (
