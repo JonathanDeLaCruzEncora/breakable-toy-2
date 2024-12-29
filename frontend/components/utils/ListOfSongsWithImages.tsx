@@ -18,7 +18,7 @@ const getMinutes = (timeMs: number) => {
   return `${min}:${sec.toString().padStart(2, "0")} `;
 };
 
-const TopSongsTable = ({ songs }: { songs: Track[] }) => {
+const ListOfSongsWithImages = ({ songs }: { songs: Track[] }) => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -28,7 +28,7 @@ const TopSongsTable = ({ songs }: { songs: Track[] }) => {
               #
             </TableCell>
             <TableCell sx={{ width: "120px" }} align="center"></TableCell>
-            <TableCell align="left">Song</TableCell>
+            <TableCell align="left">Title</TableCell>
             <TableCell align="center">Length</TableCell>
           </TableRow>
         </TableHead>
@@ -56,13 +56,14 @@ const TopSongsTable = ({ songs }: { songs: Track[] }) => {
                       height: 40,
                       aspectRatio: "1 / 1",
                       overflow: "hidden",
-                      borderRadius: 2,
+                      borderRadius: 1,
                       mx: "auto",
                     }}
                   >
-                    <img
+                    <Box
+                      component={"img"}
                       className=" object-cover  w-full h-full"
-                      src={row.album.images[0].url}
+                      src={row.album.images[row.album.images.length - 1].url}
                     />
                   </Box>
                 </TableCell>
@@ -92,4 +93,4 @@ const TopSongsTable = ({ songs }: { songs: Track[] }) => {
   );
 };
 
-export default TopSongsTable;
+export default ListOfSongsWithImages;

@@ -1,29 +1,38 @@
 "use client";
-import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
+import {
+  Album,
+  AlbumDetails,
+  Artist,
+  Track,
+  TrackDetails,
+} from "@/types/spotify";
 import React, { useEffect, useState } from "react";
-import TopSongsTable from "./utils/ListOfSongsWithImages";
 import { useAuth } from "./Auth/AuthContext";
-import LoadingBar from "./utils/LoadingBar";
-import { Album, AlbumDetails, Artist, Track } from "@/types/spotify";
+import {
+  Avatar,
+  Box,
+  Card,
+  CardActionArea,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import VarietyCard from "./utils/VarietyCard";
-import ListOfSongs from "./utils/ListOfSongs";
+import LoadingBar from "./utils/LoadingBar";
+import ArtistCardForTrackPage from "./ArtistCardForTrackPage";
 import fetchData from "@/utils/fetchData";
 import ImageAndTitle from "./utils/ImageAndTitle";
 
-const getMinutes = (timeMs: number) => {
-  const min = Math.floor(timeMs / 60000);
-  const sec = Math.floor((timeMs % 60000) / 1000);
-  return `${min}:${sec.toString().padStart(2, "0")} `;
-};
+const TrackPage = ({ trackId }: { trackId: string }) => {
+  const getMinutes = (timeMs: number) => {
+    const min = Math.floor(timeMs / 60000);
+    const sec = Math.floor((timeMs % 60000) / 1000);
+    return `${min}:${sec.toString().padStart(2, "0")} `;
+  };
 
-const getTotalMinutes = (list: Track[]) => {
-  return getMinutes(list.reduce((acc, val) => acc + val.duration_ms, 0));
-};
-
-const AlbumPage = ({ albumId }: { albumId: string }) => {
   const { accessToken } = useAuth();
-  const [album, setAlbum] = useState<AlbumDetails | null>(null);
-  const [artist, setArtist] = useState<Artist | null>(null);
+  const [track, setTrack] = useState<TrackDetails | null>(null);
+  const [artists, setArtists] = useState<Artist[]>([]);
   const [MoreFromArtist, setMoreFromArtist] = useState<Album[]>([]);
 
   useEffect(() => {
@@ -31,21 +40,23 @@ const AlbumPage = ({ albumId }: { albumId: string }) => {
       if (!accessToken) return;
 
       try {
-        if (!album) {
-          const albumData = await fetchData(`/albums/${albumId}`, accessToken);
-          setAlbum(albumData);
-          console.log(albumData);
+        if (!track) {
+          const trackData = await fetchData(`/tracks/${trackId}`, accessToken);
+          setTrack(trackData);
+          console.log(trackData);
         }
 
-        if (album) {
+        if (track?.artists) {
+          const Ids = track.artists.map(({ id }) => id).join(",");
+
           const artistData = await fetchData(
-            `/artists/${album.artists[0].id}`,
+            `/artists/multiple/${encodeURIComponent(Ids)}`,
             accessToken
           );
-          setArtist(artistData);
+          setArtists(artistData.artists || []);
 
           const moreData = await fetchData(
-            `/artists/${album.artists[0].id}/albums`,
+            `/artists/${track.artists[0].id}/albums`,
             accessToken
           );
           setMoreFromArtist(moreData.items || []);
@@ -56,11 +67,11 @@ const AlbumPage = ({ albumId }: { albumId: string }) => {
     };
 
     fetchDetails();
-  }, [accessToken, album]);
+  }, [accessToken, track]);
 
   return (
     <>
-      {album ? (
+      {track ? (
         <Box
           sx={{
             maxWidth: { xs: "full", sm: "848px", md: "1264px" },
@@ -73,23 +84,20 @@ const AlbumPage = ({ albumId }: { albumId: string }) => {
           }}
         >
           <ImageAndTitle
-            bgSrc={album.images[album.images.length - 1].url}
-            mainSrc={album.images[1].url}
-            title={album?.name}
-            subtitle1={<>{`${album.release_date.split("-")[0]}`}</>}
+            bgSrc={track.album.images[track.album.images.length - 1].url}
+            mainSrc={track.album.images[1].url}
+            title={track.name}
+            subtitle1={
+              <>{`${track.album.release_date.split("-")[0]} - From: ${
+                track.album.name
+              }`}</>
+            }
             subtitle2={
-              <>
-                {`${album?.total_tracks} Track${
-                  album?.total_tracks == 1 ? "" : "s"
-                }`}
-                {album?.total_tracks
-                  ? ` - ${getTotalMinutes(album?.tracks.items)} min`
-                  : ""}
-              </>
+              <>{track ? `${getMinutes(track.duration_ms)} min` : ""}</>
             }
             subtitle3={
               <>
-                {artist ? (
+                {artists.length ? (
                   <>
                     <Box
                       sx={{
@@ -102,11 +110,13 @@ const AlbumPage = ({ albumId }: { albumId: string }) => {
                     >
                       <Avatar
                         sx={{ width: 30, height: 30 }}
-                        src={artist.images[artist.images.length - 1].url}
+                        src={
+                          artists[0]?.images[artists[0].images.length - 1]?.url
+                        }
                       />
                       <Typography variant="subtitle2">
                         {" "}
-                        {artist.name}
+                        {artists[0].name}
                       </Typography>
                     </Box>
                   </>
@@ -120,10 +130,21 @@ const AlbumPage = ({ albumId }: { albumId: string }) => {
             variant="h5"
             sx={{ fontWeight: "bold", letterSpacing: "1px", my: "40px" }}
           >
-            Tracks
+            Featuring
           </Typography>
-          <ListOfSongs songs={album.tracks.items} />
-          {MoreFromArtist.length ? (
+
+          {artists.length ? (
+            <>
+              <Stack gap={4}>
+                {artists.map((artist, i) => (
+                  <ArtistCardForTrackPage artist={artist} key={i} />
+                ))}
+              </Stack>
+            </>
+          ) : (
+            <></>
+          )}
+          {MoreFromArtist.length && artists.length ? (
             <>
               <Typography
                 variant="h5"
@@ -134,7 +155,7 @@ const AlbumPage = ({ albumId }: { albumId: string }) => {
                   mb: "40px",
                 }}
               >
-                More from {artist?.name}
+                More from {artists[0].name}
               </Typography>
               <Stack
                 direction={"row"}
@@ -167,4 +188,4 @@ const AlbumPage = ({ albumId }: { albumId: string }) => {
   );
 };
 
-export default AlbumPage;
+export default TrackPage;

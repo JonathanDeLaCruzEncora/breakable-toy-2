@@ -36,10 +36,10 @@ const VarietyCard = ({
         maxWidth: "300px",
         border: "2px solid",
         borderColor: grey[900],
-        transition: "all",
-        transitionDuration: "200ms",
+        transition: "transform 200ms ease, border-color 200ms ease",
+        willChange: "transform",
         ":hover": {
-          scale: "105%",
+          transform: "scale(105%)",
           cursor: "pointer",
           borderColor: "primary.main",
         },
@@ -59,6 +59,7 @@ const VarietyCard = ({
         <CardMedia
           component={"img"}
           image={imgSrc}
+          loading="lazy"
           sx={{
             height: "90%",
             minHeight: "90%",
@@ -67,7 +68,7 @@ const VarietyCard = ({
             minWidth: "30%",
             aspectRatio: "1/1",
           }}
-        ></CardMedia>
+        />
         <CardContent sx={{ width: "70%", height: "90%", px: 1.5, py: 0.5 }}>
           <Box
             sx={{
@@ -120,4 +121,4 @@ const VarietyCard = ({
   );
 };
 
-export default VarietyCard;
+export default React.memo(VarietyCard);

@@ -11,13 +11,23 @@ import org.springframework.web.bind.annotation.RestController;
 import com.breakabletoy2.utils.RequestUtil;
 
 @RestController
-@RequestMapping("/albums")
-public class AlbumController {
+public class MusicController {
     
-
-    @GetMapping("/{id}")
+    @GetMapping("/albums/{id}")
     public ResponseEntity<Map<String, Object>> getArtistDetails(@RequestHeader("Authorization") String authorizationHeader, @PathVariable String id) {
         String path = "/albums/" + id;
+        return RequestUtil.RequestGet(authorizationHeader, path);
+    }
+
+    @GetMapping("/tracks/{id}")
+    public ResponseEntity<Map<String, Object>> getTrackDetails(@RequestHeader("Authorization") String authorizationHeader, @PathVariable String id) {
+        String path = "/tracks/" + id;
+        return RequestUtil.RequestGet(authorizationHeader, path);
+    }
+
+    @GetMapping("/playlists/{id}")
+    public ResponseEntity<Map<String, Object>> getPlaylistDetails(@RequestHeader("Authorization") String authorizationHeader, @PathVariable String id) {
+        String path = "/playlists/" + id;
         return RequestUtil.RequestGet(authorizationHeader, path);
     }
 }

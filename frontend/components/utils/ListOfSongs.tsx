@@ -27,7 +27,7 @@ const ListOfSongs = ({ songs }: { songs: Track[] }) => {
             <TableCell sx={{ width: "20px" }} align="center">
               #
             </TableCell>
-            <TableCell align="left">Song</TableCell>
+            <TableCell align="left">Title</TableCell>
             <TableCell align="center">Length</TableCell>
           </TableRow>
         </TableHead>
