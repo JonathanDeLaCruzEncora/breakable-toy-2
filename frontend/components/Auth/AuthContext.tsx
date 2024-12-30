@@ -1,5 +1,6 @@
 "use client";
 
+import { SearchResultsInterface } from "@/types/spotify";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
@@ -16,6 +17,8 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   setLoggedIn: (bool: boolean) => void;
+  setSearchResults: (result: SearchResultsInterface | null) => void;
+  searchResults: SearchResultsInterface | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,6 +29,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [searchResults, setSearchResults] =
+    useState<SearchResultsInterface | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -72,6 +77,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthContext.Provider
       value={{
+        searchResults,
+        setSearchResults,
         accessToken,
         setAccessToken,
         user,

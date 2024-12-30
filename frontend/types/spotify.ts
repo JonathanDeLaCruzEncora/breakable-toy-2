@@ -153,7 +153,14 @@ interface SearchItem<T> {
   items: T[];
 }
 
-export type TracksSearch = SearchItem<Track>;
-export type ArtistsSearch = SearchItem<Artist>;
-export type AlbumsSearch = SearchItem<Album>;
-export type PlaylistsSearch = SearchItem<Playlist>;
+type TracksSearch = SearchItem<Track>;
+type ArtistsSearch = SearchItem<Artist>;
+type AlbumsSearch = SearchItem<Album>;
+type PlaylistsSearch = SearchItem<Playlist>;
+
+export interface SearchResultsInterface {
+  albums: AlbumsSearch;
+  artists: ArtistsSearch;
+  tracks: TracksSearch;
+  playlists: PlaylistsSearch;
+}

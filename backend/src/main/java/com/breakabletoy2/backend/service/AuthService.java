@@ -32,7 +32,7 @@ public class AuthService {
     public URI getAuthUri() {
         
         String redirectUri = "http://localhost:3000/callback";
-        String scope = "user-top-read user-read-private";
+        String scope = "user-top-read user-read-private playlist-read-collaborative playlist-read-private";
         String encodedRedirectUri = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8);
         String encodedScope = URLEncoder.encode(scope, StandardCharsets.UTF_8);
         String authUrl = "https://accounts.spotify.com/authorize" +

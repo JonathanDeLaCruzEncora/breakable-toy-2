@@ -100,6 +100,7 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
                     mainText={album.name}
                     secondText={`${album.total_tracks} track(s)`}
                     thirdText={`${album.release_date.split("-")[0]}`}
+                    link={`/albums/${album.id}`}
                   />
                 ))}
               </Stack>

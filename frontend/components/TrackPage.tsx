@@ -13,6 +13,7 @@ import {
   Box,
   Card,
   CardActionArea,
+  Link,
   Paper,
   Stack,
   Typography,
@@ -88,9 +89,16 @@ const TrackPage = ({ trackId }: { trackId: string }) => {
             mainSrc={track.album.images[1].url}
             title={track.name}
             subtitle1={
-              <>{`${track.album.release_date.split("-")[0]} - From: ${
-                track.album.name
-              }`}</>
+              <>
+                {`${track.album.release_date.split("-")[0]} - `}
+                <Link
+                  href={`/albums/${track.album.id}`}
+                  underline="hover"
+                  color="inherit"
+                  sx={{ cursor: "pointer" }}
+                >{`
+              From: ${track.album.name}`}</Link>
+              </>
             }
             subtitle2={
               <>{track ? `${getMinutes(track.duration_ms)} min` : ""}</>
@@ -114,10 +122,17 @@ const TrackPage = ({ trackId }: { trackId: string }) => {
                           artists[0]?.images[artists[0].images.length - 1]?.url
                         }
                       />
-                      <Typography variant="subtitle2">
-                        {" "}
-                        {artists[0].name}
-                      </Typography>
+                      <Link
+                        href={`/artists/${artists[0].id}`}
+                        underline="hover"
+                        color="inherit"
+                        sx={{ cursor: "pointer" }}
+                      >
+                        <Typography variant="subtitle2">
+                          {" "}
+                          {artists[0].name}
+                        </Typography>
+                      </Link>
                     </Box>
                   </>
                 ) : (
@@ -137,7 +152,11 @@ const TrackPage = ({ trackId }: { trackId: string }) => {
             <>
               <Stack gap={4}>
                 {artists.map((artist, i) => (
-                  <ArtistCardForTrackPage artist={artist} key={i} />
+                  <ArtistCardForTrackPage
+                    artist={artist}
+                    key={i}
+                    link={`/artists/${artist.id}`}
+                  />
                 ))}
               </Stack>
             </>
@@ -171,6 +190,7 @@ const TrackPage = ({ trackId }: { trackId: string }) => {
                     mainText={album.name}
                     secondText={`${album.total_tracks} track(s)`}
                     thirdText={`${album.release_date.split("-")[0]}`}
+                    link={`/albums/${album.id}`}
                   />
                 ))}
               </Stack>

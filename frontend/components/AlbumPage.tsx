@@ -1,5 +1,5 @@
 "use client";
-import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Link, Paper, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TopSongsTable from "./utils/ListOfSongsWithImages";
 import { useAuth } from "./Auth/AuthContext";
@@ -104,10 +104,17 @@ const AlbumPage = ({ albumId }: { albumId: string }) => {
                         sx={{ width: 30, height: 30 }}
                         src={artist.images[artist.images.length - 1].url}
                       />
-                      <Typography variant="subtitle2">
-                        {" "}
-                        {artist.name}
-                      </Typography>
+                      <Link
+                        href={`/artists/${artist.id}`}
+                        color="inherit"
+                        underline="hover"
+                        sx={{ cursor: "pointer" }}
+                      >
+                        <Typography variant="subtitle2">
+                          {" "}
+                          {artist.name}
+                        </Typography>
+                      </Link>
                     </Box>
                   </>
                 ) : (
@@ -150,6 +157,7 @@ const AlbumPage = ({ albumId }: { albumId: string }) => {
                     mainText={album.name}
                     secondText={`${album.total_tracks} track(s)`}
                     thirdText={`${album.release_date.split("-")[0]}`}
+                    link={`/albums/${album.id}`}
                   />
                 ))}
               </Stack>

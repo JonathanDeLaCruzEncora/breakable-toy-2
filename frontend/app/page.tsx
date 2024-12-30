@@ -4,9 +4,13 @@ import SearchBar from "@/components/Search/SearchBar";
 import SearchResults from "@/components/Search/SearchResults";
 import TopArtists from "@/components/TopArtists/TopArtists";
 import UserMenu from "@/components/utils/UserMenu";
+import { SearchResultsInterface } from "@/types/spotify";
 import { Box } from "@mui/material";
+import { useState } from "react";
 
 export default function Home() {
+  const [searchResults, setSearchResults] =
+    useState<SearchResultsInterface | null>(null);
   return (
     <ProtectedRoute>
       <div className="">
@@ -26,7 +30,7 @@ export default function Home() {
         >
           <UserMenu />
         </Box>
-        <SearchBar searchQuery="" />
+        <SearchBar />
         <TopArtists />
 
         <SearchResults />

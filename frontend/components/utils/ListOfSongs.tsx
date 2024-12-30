@@ -1,6 +1,7 @@
 import { Track } from "@/types/spotify";
 import {
   Box,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -49,7 +50,14 @@ const ListOfSongs = ({ songs }: { songs: Track[] }) => {
                   {i + 1}
                 </TableCell>
                 <TableCell align="left">
-                  <Typography letterSpacing={1}> {row.name}</Typography>
+                  <Link
+                    underline="hover"
+                    color="inherit"
+                    href={`/tracks/${row.id}`}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <Typography letterSpacing={1}> {row.name}</Typography>
+                  </Link>
                 </TableCell>
                 <TableCell align="center">
                   {row.duration_ms ? getMinutes(row.duration_ms) : "0"}

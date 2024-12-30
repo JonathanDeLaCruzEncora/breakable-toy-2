@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Box,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -60,15 +61,27 @@ const ListOfSongsWithImages = ({ songs }: { songs: Track[] }) => {
                       mx: "auto",
                     }}
                   >
-                    <Box
-                      component={"img"}
-                      className=" object-cover  w-full h-full"
-                      src={row.album.images[row.album.images.length - 1].url}
-                    />
+                    <Link
+                      href={`/albums/${row.album.id}`}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      <Box
+                        component={"img"}
+                        className=" object-cover  w-full h-full"
+                        src={row.album.images[row.album.images.length - 1].url}
+                      />
+                    </Link>
                   </Box>
                 </TableCell>
                 <TableCell align="left">
-                  <Typography letterSpacing={1}> {row.name}</Typography>
+                  <Link
+                    href={`/tracks/${row.id}`}
+                    sx={{ cursor: "pointer" }}
+                    color="inherit"
+                    underline="hover"
+                  >
+                    <Typography letterSpacing={1}> {row.name}</Typography>
+                  </Link>
                 </TableCell>
                 <TableCell align="center">
                   {row.duration_ms ? getMinutes(row.duration_ms) : "0"}

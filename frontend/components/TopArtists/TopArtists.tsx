@@ -9,11 +9,11 @@ import {
 import { ExpandMore } from "@mui/icons-material";
 import TopArtistCard from "./TopArtistCard";
 import { useAuth } from "../Auth/AuthContext";
-import { ArtistDetailsInterface } from "@/types/spotify";
+import { Artist } from "@/types/spotify";
 
 const TopArtists = () => {
   const { accessToken } = useAuth();
-  const [topArtists, setTopArtists] = useState<ArtistDetailsInterface[]>([]);
+  const [topArtists, setTopArtists] = useState<Artist[]>([]);
 
   useEffect(() => {
     const fetchTopArtists = async () => {

@@ -8,11 +8,11 @@ import {
 } from "@mui/material";
 import React from "react";
 import Link from "next/link";
-import { ArtistDetailsInterface } from "@/types/spotify";
+import { Artist } from "@/types/spotify";
 
 interface ComponentProps {
   key: number;
-  artist: ArtistDetailsInterface;
+  artist: Artist;
 }
 
 const TopArtistCard: React.FC<ComponentProps> = ({ artist }) => {
@@ -74,7 +74,7 @@ const TopArtistCard: React.FC<ComponentProps> = ({ artist }) => {
               {artist.name}
             </Typography>
             <Typography variant="subtitle1" sx={{ color: "#d0d0d0", mt: 0.5 }}>
-              {artist?.genres.join(", ")}
+              {artist?.genres.slice(0, 3).join(", ")}
             </Typography>
           </CardContent>
         </CardActionArea>

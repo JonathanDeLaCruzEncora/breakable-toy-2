@@ -11,6 +11,10 @@ import {
 import { ChangeEvent, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { useAuth } from "../Auth/AuthContext";
+import fetchData from "@/utils/fetchData";
+import { SearchResultsInterface } from "@/types/spotify";
+import { useRouter } from "next/navigation";
 interface SearchBarProps {
   //onSearch: (query: string) => void;
   searchQuery: string;
@@ -58,17 +62,40 @@ const SearchTextField = styled((props: TextFieldProps) => (
   },
 }));
 
-const SearchBar = ({ searchQuery }: SearchBarProps) => {
+const SearchBar = () => {
+  const { accessToken, setSearchResults } = useAuth();
   const [query, setQuery] = useState("");
-
-  useEffect(() => {
-    setQuery(searchQuery);
-  }, []);
+  const router = useRouter();
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setQuery(value);
-    //onSearch(value); // Send the updated value to the parent component
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const handleSearch = async () => {
+    if (query.trim() !== "") {
+      const fetchDetails = async () => {
+        if (!accessToken) return;
+        try {
+          const searchResults = await fetchData(
+            `/search?query=${encodeURIComponent(query)}`,
+            accessToken
+          );
+          setSearchResults(searchResults);
+          if (window.location.pathname !== "/") router.push("/");
+          console.log(searchResults);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchDetails();
+    }
   };
 
   return (
@@ -102,6 +129,7 @@ const SearchBar = ({ searchQuery }: SearchBarProps) => {
         variant="filled"
         value={query}
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
         fullWidth
       />
       <Box

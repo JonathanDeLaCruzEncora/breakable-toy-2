@@ -5,8 +5,9 @@ import UserMenu from "@/components/utils/UserMenu";
 import { Box, Button } from "@mui/material";
 
 import HomeIcon from "@mui/icons-material/Home";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { SearchResultsInterface } from "@/types/spotify";
 
 function layout({
   children,
@@ -48,7 +49,7 @@ function layout({
         </Link>
         <UserMenu />
       </Box>
-      <SearchBar searchQuery="" />
+      <SearchBar />
       {children}
     </ProtectedRoute>
   );

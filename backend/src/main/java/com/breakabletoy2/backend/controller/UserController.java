@@ -19,12 +19,12 @@ public class UserController {
 
     @GetMapping("/me/top/artists")
     public ResponseEntity<Map<String, Object>> getTopArtists(@RequestHeader("Authorization") String authorizationHeader) {
-        return RequestUtil.RequestGet(authorizationHeader, "/me/top/artists?limit=6");
+        return RequestUtil.RequestGet(authorizationHeader, "/me/top/artists?limit=9");
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam String query) {
-        // Lógica para buscar artistas, álbumes o pistas
-        return "Resultados de búsqueda para: " + query;
+    public ResponseEntity<Map<String, Object>> search(@RequestHeader("Authorization") String authorizationHeader, @RequestParam String query) {
+        String path = "/search?q="+query+"&type=album,playlist,track,artist";
+        return RequestUtil.RequestGet(authorizationHeader, path);
     }
 }

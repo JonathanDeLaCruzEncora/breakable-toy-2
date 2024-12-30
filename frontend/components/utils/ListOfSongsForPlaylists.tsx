@@ -84,7 +84,17 @@ const ListOfSongsForPlaylists = ({ items }: ComponentProps) => {
                   </Box>
                 </TableCell>
                 <TableCell align="left">
-                  <Typography variant="subtitle2"> {row.track.name}</Typography>
+                  <Link
+                    color="inherit"
+                    underline="hover"
+                    href={`/tracks/${row.track.id}`}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <Typography variant="subtitle2">
+                      {" "}
+                      {row.track.name}
+                    </Typography>
+                  </Link>
                   <Typography
                     variant="subtitle2"
                     sx={{ color: "grey.600", fontSize: 12 }}
@@ -94,7 +104,6 @@ const ListOfSongsForPlaylists = ({ items }: ComponentProps) => {
                       <span key={i}>
                         <Link
                           href={`/artists/${id}`}
-                          target="_blank"
                           underline="hover"
                           color="grey.600"
                         >
@@ -105,7 +114,16 @@ const ListOfSongsForPlaylists = ({ items }: ComponentProps) => {
                     ))}
                   </Typography>
                 </TableCell>
-                <TableCell align="left">{row.track.album.name}</TableCell>
+                <TableCell align="left">
+                  <Link
+                    color="inherit"
+                    underline="hover"
+                    sx={{ cursor: "pointer" }}
+                    href={`/albums/${row.track.album.id}`}
+                  >
+                    {row.track.album.name}
+                  </Link>
+                </TableCell>
                 <TableCell align="center">{formatDate(row.added_at)}</TableCell>
                 <TableCell align="center">
                   {row.track.duration_ms
