@@ -40,7 +40,7 @@ const ListOfSongsForPlaylists = ({ items }: ComponentProps) => {
             <TableCell sx={{ width: "120px" }} align="center"></TableCell>
             <TableCell align="left">Title</TableCell>
             <TableCell align="left">Album</TableCell>
-            <TableCell align="left">Added</TableCell>
+            <TableCell align="center">Added</TableCell>
             <TableCell align="center">Length</TableCell>
           </TableRow>
         </TableHead>

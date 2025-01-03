@@ -14,7 +14,9 @@ const Callback = () => {
   useEffect(() => {
     if (code) {
       setLoggedIn(false);
-      fetch("http://localhost:8080/auth/spotify/callback?code=" + code)
+      fetch("http://localhost:8080/auth/spotify/callback?code=" + code, {
+        method: "POST",
+      })
         .then((res) => res.json())
         .then((data) => {
           console.log(data);

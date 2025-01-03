@@ -7,7 +7,6 @@ import LoadingBar from "./utils/LoadingBar";
 import { Album, AlbumDetails, Artist, Track } from "@/types/spotify";
 import VarietyCard from "./utils/VarietyCard";
 import ListOfSongs from "./utils/ListOfSongs";
-import fetchData from "@/utils/fetchData";
 import ImageAndTitle from "./utils/ImageAndTitle";
 
 const getMinutes = (timeMs: number) => {
@@ -21,7 +20,7 @@ const getTotalMinutes = (list: Track[]) => {
 };
 
 const AlbumPage = ({ albumId }: { albumId: string }) => {
-  const { accessToken } = useAuth();
+  const { accessToken, fetchData } = useAuth();
   const [album, setAlbum] = useState<AlbumDetails | null>(null);
   const [artist, setArtist] = useState<Artist | null>(null);
   const [MoreFromArtist, setMoreFromArtist] = useState<Album[]>([]);

@@ -35,7 +35,6 @@ public class ArtistController {
     @GetMapping("/multiple/{ids}")
     public ResponseEntity<Map<String, Object>> getArtists(@RequestHeader("Authorization") String authorizationHeader, @PathVariable String ids) {
         String path = "/artists?ids=" + ids;
-        System.out.println(path);
         return RequestUtil.RequestGet(authorizationHeader, path);
     }
 

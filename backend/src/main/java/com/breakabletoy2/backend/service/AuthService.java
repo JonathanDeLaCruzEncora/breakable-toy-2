@@ -28,7 +28,6 @@ public class AuthService {
     @Value("${spotify.client.secret}")
     private String clientSecret;
 
-    // @GetMapping("/auth/spotify")
     public URI getAuthUri() {
         
         String redirectUri = "http://localhost:3000/callback";
@@ -40,13 +39,9 @@ public class AuthService {
                         "&response_type=code" +
                         "&redirect_uri=" + encodedRedirectUri +
                         "&scope=" + encodedScope;
-        // HttpHeaders headers = new HttpHeaders();
         return URI.create(authUrl);
-        // headers.setLocation(URI.create(authUrl));
-        // return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
-    // @GetMapping("/auth/spotify/callback")
     public ResponseEntity<Map> handleSpotifyCallback(@RequestParam String code) {
             RestTemplate restTemplate = new RestTemplate();
             String tokenUrl = "https://accounts.spotify.com/api/token";
@@ -64,4 +59,26 @@ public class AuthService {
             return restTemplate.postForEntity(tokenUrl, request, Map.class);
     }
 
+    public Map<String, Object> refreshAccessToken(String refreshToken) {
+        RestTemplate restTemplate = new RestTemplate();
+        String tokenUrl = "https://accounts.spotify.com/api/token";
+    
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBasicAuth(clientId, clientSecret);
+    
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "refresh_token");
+        body.add("refresh_token", refreshToken);
+    
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+    
+        ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, request, Map.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return response.getBody();
+        } else {
+            throw new RuntimeException("Error al refrescar el token: " + response.getStatusCode());
+        }
+    }
+    
 }

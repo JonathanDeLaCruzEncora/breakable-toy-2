@@ -6,11 +6,10 @@ import LoadingBar from "./utils/LoadingBar";
 import { Album, Artist, Track } from "@/types/spotify";
 import VarietyCard from "./utils/VarietyCard";
 import ListOfSongsWithImages from "./utils/ListOfSongsWithImages";
-import fetchData from "@/utils/fetchData";
 import ImageAndTitle from "./utils/ImageAndTitle";
 
 const ArtistPage = ({ artistId }: { artistId: string }) => {
-  const { accessToken } = useAuth();
+  const { accessToken, fetchData } = useAuth();
   const [artist, setArtist] = useState<Artist | null>(null);
   const [topSongs, setTopSongs] = useState<Track[]>([]);
   const [discography, setDiscography] = useState<Album[]>([]);
@@ -21,7 +20,6 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
       try {
         const artistData = await fetchData(`/artists/${artistId}`, accessToken);
         setArtist(artistData);
-        console.log(artistData);
 
         const topTracksData = await fetchData(
           `/artists/${artistId}/top-tracks`,
@@ -60,7 +58,13 @@ const ArtistPage = ({ artistId }: { artistId: string }) => {
             bgSrc={artist.images[artist.images.length - 1].url}
             mainSrc={artist.images[1].url}
             title={artist.name}
-            subtitle1={<>{`Genres: ${artist.genres.join(", ")}`}</>}
+            subtitle1={
+              <>
+                {artist.genres.length
+                  ? `Genres: ${artist.genres.join(", ")}`
+                  : ""}
+              </>
+            }
             subtitle2={
               <>{`${artist.followers.total.toLocaleString()} Followers`}</>
             }
