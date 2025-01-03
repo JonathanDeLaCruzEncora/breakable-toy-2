@@ -12,8 +12,6 @@ import { ChangeEvent, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { useAuth } from "../Auth/AuthContext";
-import fetchData from "@/utils/fetchData";
-import { SearchResultsInterface } from "@/types/spotify";
 import { useRouter } from "next/navigation";
 interface SearchBarProps {
   //onSearch: (query: string) => void;
@@ -63,7 +61,7 @@ const SearchTextField = styled((props: TextFieldProps) => (
 }));
 
 const SearchBar = () => {
-  const { accessToken, setSearchResults } = useAuth();
+  const { accessToken, setSearchResults, fetchData } = useAuth();
   const [query, setQuery] = useState("");
   const router = useRouter();
 
@@ -89,7 +87,6 @@ const SearchBar = () => {
           );
           setSearchResults(searchResults);
           if (window.location.pathname !== "/") router.push("/");
-          console.log(searchResults);
         } catch (error) {
           console.error(error);
         }
@@ -133,6 +130,7 @@ const SearchBar = () => {
         fullWidth
       />
       <Box
+        role="button"
         sx={{
           position: "absolute",
           right: "28px",

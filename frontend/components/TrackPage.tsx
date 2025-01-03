@@ -21,7 +21,6 @@ import {
 import VarietyCard from "./utils/VarietyCard";
 import LoadingBar from "./utils/LoadingBar";
 import ArtistCardForTrackPage from "./ArtistCardForTrackPage";
-import fetchData from "@/utils/fetchData";
 import ImageAndTitle from "./utils/ImageAndTitle";
 
 const TrackPage = ({ trackId }: { trackId: string }) => {
@@ -31,7 +30,7 @@ const TrackPage = ({ trackId }: { trackId: string }) => {
     return `${min}:${sec.toString().padStart(2, "0")} `;
   };
 
-  const { accessToken } = useAuth();
+  const { accessToken, fetchData } = useAuth();
   const [track, setTrack] = useState<TrackDetails | null>(null);
   const [artists, setArtists] = useState<Artist[]>([]);
   const [MoreFromArtist, setMoreFromArtist] = useState<Album[]>([]);

@@ -30,7 +30,7 @@ const VarietyCard = ({
   link,
 }: ComponentProps) => {
   return (
-    <Link href={link}>
+    <Link role="link" href={link}>
       <Card
         elevation={2}
         sx={{

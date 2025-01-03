@@ -4,9 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "./Auth/AuthContext";
 import LoadingBar from "./utils/LoadingBar";
 import { Album, Playlist, Track } from "@/types/spotify";
-import VarietyCard from "./utils/VarietyCard";
-import ListOfSongsWithImages from "./utils/ListOfSongsWithImages";
-import fetchData from "@/utils/fetchData";
 import ListOfSongsForPlaylists from "./utils/ListOfSongsForPlaylists";
 import ImageAndTitle from "./utils/ImageAndTitle";
 
@@ -21,7 +18,7 @@ const getTotalMinutes = (list: Track[]) => {
 };
 
 const PlaylistPage = ({ playlistId }: { playlistId: string }) => {
-  const { accessToken } = useAuth();
+  const { accessToken, fetchData } = useAuth();
   const [playlist, setPlaylist] = useState<Playlist | null>(null);
 
   useEffect(() => {
